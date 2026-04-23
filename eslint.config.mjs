@@ -103,7 +103,7 @@ const eslintConfig = defineConfig([
       "@typescript-eslint/no-magic-numbers": [
         "warn",
         {
-          ignore: [],
+          ignore: [-1, 0, 1],
           ignoreArrayIndexes: true,
           ignoreEnums: true,
           ignoreReadonlyClassProperties: true
