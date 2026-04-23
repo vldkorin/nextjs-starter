@@ -14,12 +14,19 @@
     "lint:format": "npx prettier \"**/*.{js,ts,tsx,json,md,css,html}\" --check",
     "lint-staged": "lint-staged",
     "prepare": "husky",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@next/env": "^16.2.4",
+    "drizzle-orm": "^0.45.2",
     "next": "16.2.4",
+    "postgres": "^3.4.9",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
@@ -33,6 +40,7 @@
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.59.0",
     "@typescript-eslint/parser": "^8.59.0",
+    "drizzle-kit": "^0.31.10",
     "editorconfig-checker": "^6.0.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.4",
