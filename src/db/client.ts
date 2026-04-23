@@ -13,4 +13,4 @@ const client = postgres({
   database: Env.DB_NAME
 });
 
-export const Db = drizzle(client, { schema });
+export const db = drizzle(client, { schema });
