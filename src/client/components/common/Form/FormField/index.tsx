@@ -1,3 +1,4 @@
+import { Input } from "../../Input";
 import { FieldError } from "../FieldError";
 import type { FieldLike } from "./types";
 
@@ -21,8 +22,7 @@ const FormField = ({
   return (
     <label className="flex flex-col gap-2 text-sm">
       <span>{label}</span>
-      <input
-        className="rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-black dark:border-zinc-700 dark:bg-zinc-900"
+      <Input
         autoComplete={autoComplete}
         name={field.name}
         onBlur={field.handleBlur}

@@ -4,6 +4,7 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
+import { Button } from "@/src/client/components/common/Button";
 import { FormField } from "@/src/client/components/common/Form/FormField";
 import { useTRPC } from "@/src/server/trpc/utils";
 import {
@@ -101,13 +102,9 @@ export default function RegisterPage() {
           }}
         </form.Field>
 
-        <button
-          className="h-11 rounded-md bg-black text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-100 dark:text-black"
-          type="submit"
-          disabled={registerMutation.isPending}
-        >
+        <Button type="submit" disabled={registerMutation.isPending}>
           {registerMutation.isPending ? "Registering..." : "Register"}
-        </button>
+        </Button>
       </form>
 
       {registerMutation.error ? (
