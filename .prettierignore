@@ -1,1 +1,1 @@
-drizzle/meta/**
+src/server/db/migrations/meta/**

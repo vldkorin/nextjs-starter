@@ -3,7 +3,7 @@ import { Env } from "./env.config";
 
 export default defineConfig({
   schema: "./src/server/db/schema.ts",
-  out: "./drizzle",
+  out: "./src/server/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
     host: Env.DB_HOST,
