@@ -16,6 +16,15 @@ export const ProjectPrefix = {
   SCOPE: {
     COMMON: ["root", "config", "infra", "ci", "release"],
     APP: ["web"],
-    CODE: ["app", "components", "lib", "api", "db", "server", "shared"]
+    CODE: [
+      "app",
+      "components",
+      "lib",
+      "api",
+      "db",
+      "server",
+      "shared",
+      "client"
+    ]
   }
 };
