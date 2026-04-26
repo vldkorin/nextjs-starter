@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 
-import { db } from "@/src/db/client";
-import { users } from "@/src/db/schema";
+import { db } from "@/src/server/db/client";
+import { users } from "@/src/server/db/schema";
 import type { CreateUserInput, UserEntity } from "@/src/shared";
 
 class UsersRepository {
