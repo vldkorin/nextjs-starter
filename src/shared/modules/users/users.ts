@@ -1,1 +1,5 @@
-export type { CreateUserInput, UserEntity } from "./types/types";
+export type {
+  CreateUserInput,
+  CreateUserRequest,
+  UserEntity
+} from "./types/types";
