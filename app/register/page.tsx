@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { Button } from "@/src/client/components/common/Button";
 import { FormField } from "@/src/client/components/common/Form/FormField";
-import { useTRPC } from "@/src/server/trpc/utils";
+import { useTRPC } from "@/src/client/trpc/utils";
 import {
   type RegisterInput,
   type RegisterResult,
