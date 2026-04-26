@@ -1,5 +1,1 @@
-export type {
-  CreateUserInput,
-  CreateUserRequest,
-  UserEntity
-} from "./types/types";
+export type { CreateUserRequest, UserEntity } from "./types/types";

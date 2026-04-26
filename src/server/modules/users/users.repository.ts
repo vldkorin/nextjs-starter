@@ -1,8 +1,10 @@
 import { eq } from "drizzle-orm";
 
+import type { CreateUserInput } from "./types/create-user-input.type";
+
 import { db } from "@/src/server/db/client";
 import { users } from "@/src/server/db/schema";
-import type { CreateUserInput, UserEntity } from "@/src/shared";
+import type { UserEntity } from "@/src/shared";
 
 class UsersRepository {
   public async findByEmail(email: string): Promise<UserEntity | null> {
