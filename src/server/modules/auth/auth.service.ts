@@ -1,13 +1,16 @@
 import type { UsersService } from "@/src/server/modules/users/users.service";
-import { token } from "@/src/server/utils/token/token";
+import type { Token } from "@/src/server/utils/token/types/types";
 import type { RegisterInput, RegisterResult } from "@/src/shared";
 
 class AuthService {
-  public constructor(private readonly usersService: UsersService) {}
+  public constructor(
+    private readonly usersService: UsersService,
+    private readonly token: Token
+  ) {}
 
   public async register(input: RegisterInput): Promise<RegisterResult> {
     const user = await this.usersService.create(input);
-    const accessToken = await token.create({ userId: user.id });
+    const accessToken = await this.token.create({ userId: user.id });
 
     return {
       token: accessToken,

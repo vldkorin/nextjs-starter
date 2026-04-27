@@ -1,5 +1,5 @@
 import type { UsersRepository } from "@/src/server/modules/users/users.repository";
-import { hash } from "@/src/server/utils/hash/hash";
+import type { Hash } from "@/src/server/utils/hash/types/types";
 import {
   AuthValidationEnum,
   type CreateUserRequest,
@@ -7,7 +7,10 @@ import {
 } from "@/src/shared";
 
 class UsersService {
-  public constructor(private readonly usersRepository: UsersRepository) {}
+  public constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly hash: Hash
+  ) {}
 
   public async create(input: CreateUserRequest): Promise<UserEntity> {
     if (input.password.length < AuthValidationEnum.PASSWORD_MIN_LENGTH) {
@@ -27,7 +30,7 @@ class UsersService {
       throw new Error("User with this email already exists");
     }
 
-    const { encryptedData } = await hash.encrypt(input.password);
+    const { encryptedData } = await this.hash.encrypt(input.password);
 
     return this.usersRepository.create({
       email,
