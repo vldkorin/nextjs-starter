@@ -1,12 +1,12 @@
 import bcrypt from "bcryptjs";
 
-import type { EncyptedDataResponse } from "./types/types";
+import type { EncyptedDataResponse, Hash } from "./types/types";
 
 type Constructor = {
   saltRounds: number;
 };
 
-class BaseHash {
+class BaseHash implements Hash {
   private readonly saltRounds: number;
 
   public constructor({ saltRounds }: Constructor) {

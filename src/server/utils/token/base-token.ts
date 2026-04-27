@@ -1,6 +1,6 @@
 import { jwtVerify, SignJWT } from "jose";
 
-import type { TokenPayload } from "./types/types";
+import type { Token, TokenPayload } from "./types/types";
 
 type Constructor = {
   jwtAlgorithm: string;
@@ -8,7 +8,7 @@ type Constructor = {
   tokenExpirationTime: string;
 };
 
-class BaseToken {
+class BaseToken implements Token {
   private readonly jwtAlgorithm: string;
 
   private readonly secret: Uint8Array;

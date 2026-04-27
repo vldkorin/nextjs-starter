@@ -1,1 +1,1 @@
-export type TokenPayload = Record<string, unknown>;
+export { type JWTPayload as TokenPayload } from "jose";
