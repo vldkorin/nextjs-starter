@@ -1,0 +1,8 @@
+ls:
+  .:
+    .*: regex:^[a-z0-9._-]+$
+
+ignore:
+  - .git
+  - .next
+  - node_modules
