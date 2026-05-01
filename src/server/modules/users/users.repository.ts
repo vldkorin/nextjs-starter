@@ -4,7 +4,7 @@ import type { CreateUserInput } from "./types/create-user-input.type";
 import type { User } from "./types/user.type";
 
 import { db } from "@/src/server/db/client";
-import { users } from "@/src/server/db/schema";
+import { users } from "@/src/server/modules/users/tables/users.table";
 
 class UsersRepository {
   public async findByEmail(email: string): Promise<User | null> {
