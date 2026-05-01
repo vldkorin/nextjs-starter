@@ -1,4 +1,4 @@
-import { getFirstErrorMessage } from "./utils";
+import { getFirstErrorMessage } from "./get-first-error-message";
 
 interface FieldErrorProps {
   errors: unknown[];

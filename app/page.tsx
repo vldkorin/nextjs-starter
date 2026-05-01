@@ -1,5 +1,5 @@
-import { AppRoute } from "@/src/client/common/enums/route";
-import { Link } from "@/src/client/components/common/Link";
+import { AppRoute } from "@/src/client/common/enums/route/app-route.enum";
+import { Link } from "@/src/client/components/atoms/link/link";
 
 export default function Home() {
   return (

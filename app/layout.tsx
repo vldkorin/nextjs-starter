@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
-import { TrpcProvider } from "@/src/client/trpc/client";
+import { mergeClassNames } from "@/src/client/common/utils/class-name/merge-class-names";
+import { TrpcProvider } from "@/src/client/trpc/trpc-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={mergeClassNames(
+        geistSans.variable,
+        geistMono.variable,
+        "h-full antialiased"
+      )}
     >
       <body className="min-h-full flex flex-col">
         <TrpcProvider>{children}</TrpcProvider>

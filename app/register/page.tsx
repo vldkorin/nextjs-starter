@@ -4,14 +4,12 @@ import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { Button } from "@/src/client/components/common/Button";
-import { FormField } from "@/src/client/components/common/Form/FormField";
-import { useTRPC } from "@/src/client/trpc/utils";
-import {
-  type RegisterInput,
-  type RegisterResult,
-  registerSchema
-} from "@/src/shared";
+import { Button } from "@/src/client/components/atoms/button/button";
+import { FormField } from "@/src/client/components/molecules/form-field/form-field";
+import { useTRPC } from "@/src/client/trpc/trpc-context";
+import { registerSchema } from "@/src/shared/modules/auth/schemas/register.schema";
+import type { RegisterInput } from "@/src/shared/modules/auth/types/register.input.type";
+import type { RegisterResult } from "@/src/shared/modules/auth/types/register.result.type";
 
 export default function RegisterPage() {
   const trpc = useTRPC();

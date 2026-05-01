@@ -1,6 +1,7 @@
-import { Input } from "../../Input";
-import { FieldError } from "../FieldError";
-import type { FieldLike } from "./types";
+import { FieldError } from "./field-error/field-error";
+import type { FieldLike } from "./types/form-field.type";
+
+import { Input } from "@/src/client/components/atoms/input/input";
 
 interface FormFieldProps {
   autoComplete?: string;

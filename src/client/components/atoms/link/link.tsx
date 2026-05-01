@@ -1,7 +1,7 @@
 import NextLink from "next/link";
 import type { ComponentProps } from "react";
 
-import { mergeClassNames } from "@/src/client/common/utils/string";
+import { mergeClassNames } from "@/src/client/common/utils/class-name/merge-class-names";
 
 interface LinkProps extends ComponentProps<typeof NextLink> {
   variant?: "primary" | "secondary";

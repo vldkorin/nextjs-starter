@@ -6,9 +6,9 @@ import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { useState } from "react";
 import superjson from "superjson";
 
-import { TRPC_API_ENDPOINT } from "./constants";
-import { makeQueryClient } from "./query-client";
-import { TRPCProvider } from "./utils";
+import { makeQueryClient } from "./make-query-client";
+import { TRPC_API_ENDPOINT } from "./trpc-api-endpoint.constant";
+import { TRPCProvider } from "./trpc-context";
 
 import type { AppRouter } from "@/src/server/trpc/router";
 
