@@ -1,6 +1,7 @@
 import type { UsersRepository } from "@/src/server/modules/users/users.repository";
 import type { Hash } from "@/src/server/utils/hash/types/types";
 import { registerSchema } from "@/src/shared/modules/auth/schemas/register.schema";
+import { UserErrorMessageEnum } from "@/src/shared/modules/users/enums/user-error-message.enum";
 import type { CreateUserRequest } from "@/src/shared/modules/users/types/user.create-request.type";
 import type { UserEntity } from "@/src/shared/modules/users/types/user.type";
 
@@ -15,7 +16,7 @@ class UsersService {
     const existingUser = await this.usersRepository.findByEmail(email);
 
     if (existingUser) {
-      throw new Error("User with this email already exists");
+      throw new Error(UserErrorMessageEnum.USER_WITH_EMAIL_ALREADY_EXISTS);
     }
 
     const { encryptedData } = await this.hash.encrypt(password);

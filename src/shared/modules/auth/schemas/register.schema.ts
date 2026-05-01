@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { AuthErrorMessageEnum } from "../enums/auth-error-message.enum";
 import { AuthValidationEnum } from "../enums/auth-validation.enum";
 
 const registerSchema = z
@@ -18,7 +19,7 @@ const registerSchema = z
       return value.password === value.confirmPassword;
     },
     {
-      message: "Passwords do not match",
+      message: AuthErrorMessageEnum.PASSWORDS_DO_NOT_MATCH,
       path: ["confirmPassword"]
     }
   );
