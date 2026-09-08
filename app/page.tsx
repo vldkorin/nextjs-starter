@@ -20,8 +20,11 @@ export default function Home() {
           <Link href={AppRoute.REGISTER} variant="primary">
             Get Started
           </Link>
-          <Link href={AppRoute.REGISTER} variant="secondary">
-            Open Register Page
+          <Link href={AppRoute.LOGIN} variant="secondary">
+            Sign In
+          </Link>
+          <Link href={AppRoute.USERS} variant="secondary">
+            View Users
           </Link>
         </div>
       </section>
