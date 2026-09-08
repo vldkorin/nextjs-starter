@@ -12,10 +12,10 @@ const schema = z.object({
   DB_USER: z.string().min(1),
   DB_PASSWORD: z.string().min(1),
   DB_NAME: z.string().min(1),
-  HASH_SALT_ROUNDS: z.coerce.number().int().positive(),
-  JWT_ALGORITHM: z.string().min(1),
-  JWT_SECRET: z.string().min(1),
-  JWT_EXPIRATION_TIME: z.string().min(1)
+  BETTER_AUTH_SECRET: z.string().min(32),
+  BETTER_AUTH_URL: z.url(),
+  GOOGLE_CLIENT_ID: z.string().min(1),
+  GOOGLE_CLIENT_SECRET: z.string().min(1)
 });
 
 export const Env = schema.parse(process.env);
