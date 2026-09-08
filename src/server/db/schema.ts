@@ -1,7 +1,7 @@
-import * as usersSchema from "@/src/server/modules/users/tables/users.table";
+import * as authTables from "@/src/server/db/tables/auth.table";
 
 const schema = {
-  ...usersSchema
+  ...authTables
 };
 
 export { schema };
