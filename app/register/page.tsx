@@ -2,33 +2,38 @@
 
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
 
+import { authClient } from "@/src/client/auth/auth-client";
+import { AppRoute } from "@/src/client/common/enums/route/app-route.enum";
 import { Button } from "@/src/client/components/atoms/button/button";
 import { FormField } from "@/src/client/components/molecules/form-field/form-field";
-import { useTRPC } from "@/src/client/trpc/trpc-context";
+import { GoogleAuthButton } from "@/src/client/components/organisms/google-auth-button/google-auth-button";
 import { registerSchema } from "@/src/shared/modules/auth/schemas/register.schema";
 import type { RegisterInput } from "@/src/shared/modules/auth/types/register.input.type";
-import type { RegisterResult } from "@/src/shared/modules/auth/types/register.result.type";
 
 export default function RegisterPage() {
-  const trpc = useTRPC();
+  const registerMutation = useMutation({
+    mutationFn: async (value: RegisterInput) => {
+      const { data, error } = await authClient.signUp.email({
+        email: value.email,
+        name: value.name,
+        password: value.password
+      });
 
-  const [registeredData, setRegisteredData] = useState<RegisterResult | null>(
-    null
-  );
-
-  const registerMutation = useMutation(
-    trpc.auth.register.mutationOptions({
-      onSuccess: (data) => {
-        setRegisteredData(data);
-        form.reset();
+      if (error) {
+        throw new Error(error.message ?? "Registration failed");
       }
-    })
-  );
+
+      return data;
+    },
+    onSuccess: () => {
+      window.location.assign(AppRoute.HOME);
+    }
+  });
 
   const form = useForm({
     defaultValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: ""
@@ -55,6 +60,21 @@ export default function RegisterPage() {
           void form.handleSubmit();
         }}
       >
+        <form.Field name="name">
+          {(field) => {
+            return (
+              <FormField
+                autoComplete="name"
+                field={field}
+                label="Name"
+                placeholder="Your name"
+                submissionAttempts={form.state.submissionAttempts}
+                type="text"
+              />
+            );
+          }}
+        </form.Field>
+
         <form.Field name="email">
           {(field) => {
             return (
@@ -111,13 +131,20 @@ export default function RegisterPage() {
         </p>
       ) : null}
 
-      {registeredData ? (
-        <div className="rounded-md border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-300">
-          <p>Registration completed</p>
-          <p>Email: {registeredData.user.email}</p>
-          <p className="break-all">Token: {registeredData.token}</p>
-        </div>
-      ) : null}
+      <div className="flex items-center gap-3">
+        <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+        <span className="text-xs text-zinc-500 dark:text-zinc-400">or</span>
+        <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" />
+      </div>
+
+      <GoogleAuthButton />
+
+      <p className="text-sm text-zinc-600 dark:text-zinc-400">
+        Already have an account?{" "}
+        <a className="underline" href={AppRoute.LOGIN}>
+          Sign in
+        </a>
+      </p>
     </main>
   );
 }
