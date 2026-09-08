@@ -2,32 +2,32 @@
 
 A production-oriented full-stack starter for building type-safe applications
 with Next.js. It provides a modular project structure, a tRPC API, PostgreSQL
-persistence, shared validation, and a complete user registration flow.
+persistence, shared validation, and a complete authentication flow powered by
+better-auth.
 
 ## Features
 
 - Next.js App Router with React and TypeScript
 - End-to-end type-safe API powered by tRPC
 - PostgreSQL persistence with Drizzle ORM and versioned migrations
+- Authentication with better-auth: email/password and Google sign-in
 - Client-side server state management with TanStack Query
 - Forms built with TanStack Form and shared Zod validation
-- User registration with duplicate email protection
-- Password hashing with bcrypt and JWT creation with JOSE
 - Reusable client components styled with Tailwind CSS
 - ESLint, Prettier, Knip, ls-lint, EditorConfig, Husky, and Commitlint
 
 ## Tech stack
 
-| Area                     | Technology                                |
-| ------------------------ | ----------------------------------------- |
-| Framework                | Next.js 16, React 19, TypeScript          |
-| API                      | tRPC 11, SuperJSON                        |
-| Database                 | PostgreSQL, Drizzle ORM                   |
-| Forms and validation     | TanStack Form, Zod                        |
-| Data fetching            | TanStack Query                            |
-| Authentication utilities | bcryptjs, JOSE                            |
-| Styling                  | Tailwind CSS 4                            |
-| Code quality             | ESLint, Prettier, Knip, Husky, Commitlint |
+| Area                 | Technology                                 |
+| -------------------- | ------------------------------------------ |
+| Framework            | Next.js 16, React 19, TypeScript           |
+| API                  | tRPC 11, SuperJSON                         |
+| Database             | PostgreSQL, Drizzle ORM                    |
+| Authentication       | better-auth (email/password, Google OAuth) |
+| Forms and validation | TanStack Form, Zod                         |
+| Data fetching        | TanStack Query                             |
+| Styling              | Tailwind CSS 4                             |
+| Code quality         | ESLint, Prettier, Knip, Husky, Commitlint  |
 
 ## Getting started
 
@@ -36,6 +36,7 @@ persistence, shared validation, and a complete user registration flow.
 - Node.js 20.9 or newer
 - npm
 - A running PostgreSQL instance
+- A Google OAuth client (for Google sign-in)
 
 ### 1. Install dependencies
 
@@ -54,17 +55,20 @@ DB_USER=postgres
 DB_PASSWORD=postgres
 DB_NAME=nextjs_starter
 
-HASH_SALT_ROUNDS=10
-
-JWT_ALGORITHM=HS256
-JWT_SECRET=replace-with-a-long-random-secret
-JWT_EXPIRATION_TIME=7d
+BETTER_AUTH_SECRET=replace-with-a-long-random-secret
+BETTER_AUTH_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=replace-with-google-client-id
+GOOGLE_CLIENT_SECRET=replace-with-google-client-secret
 ```
 
 All variables are validated at startup in `env.config.ts`. The application
 will fail fast if a required value is missing or invalid.
 
-> Do not commit `.env` files or use the example JWT secret in production.
+`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` come from a Google OAuth client
+(Google Cloud Console → APIs & Services → Credentials). Add
+`{BETTER_AUTH_URL}/api/auth/callback/google` as an authorized redirect URI.
+
+> Do not commit `.env` files or use example secrets in production.
 
 ### 3. Apply database migrations
 
@@ -80,48 +84,71 @@ npm run db:migrate
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The registration example
-is available at [http://localhost:3000/register](http://localhost:3000/register).
+Open [http://localhost:3000](http://localhost:3000). Registration is
+available at [http://localhost:3000/register](http://localhost:3000/register)
+and sign-in at [http://localhost:3000/login](http://localhost:3000/login).
 
-## How registration works
+## How authentication works
 
-1. TanStack Form validates the input with the shared Zod schema.
-2. The client calls the `auth.register` tRPC mutation.
-3. The users service checks whether the normalized email already exists.
-4. The password is hashed with bcrypt and the user is saved to PostgreSQL.
-5. The API returns the public user data and a signed JWT.
+Authentication is handled entirely by
+[better-auth](https://www.better-auth.com/), configured in
+`src/server/modules/auth/auth.ts` and exposed to the app through the catch-all
+route handler at `app/api/auth/[...all]/route.ts`.
 
-The demo registration page displays the returned token so the complete flow is
-easy to verify. A production application should store and transmit tokens using
-an authentication strategy appropriate to its threat model, such as secure,
-HTTP-only cookies.
+1. TanStack Form validates registration and login input with shared Zod
+   schemas.
+2. The client calls `authClient` (`src/client/auth/auth-client.ts`), a
+   better-auth React client, to sign up or sign in with email and password.
+3. The register and login pages also render a "Continue with Google" button
+   that starts the better-auth Google OAuth flow.
+4. better-auth persists users, sessions, accounts, and verification tokens
+   directly to PostgreSQL through the Drizzle adapter, and issues a
+   session cookie on success.
+
+There is no custom password hashing, token signing, or user-registration
+business logic left in the app — better-auth owns that surface entirely.
+
+The `/users` page and the `users.list` tRPC procedure remain as a minimal,
+unstyled example of reading application data (in this case, the users
+better-auth persisted) through the existing tRPC setup.
 
 ## Project structure
 
 ```text
 app/
-├── api/trpc/[trpc]/   # tRPC HTTP handler
-├── register/          # Registration page
-├── layout.tsx         # Root layout and providers
-└── page.tsx           # Landing page
+├── api/
+│   ├── auth/[...all]/ # better-auth catch-all route handler
+│   └── trpc/[trpc]/   # tRPC HTTP handler
+├── login/              # Login page
+├── register/           # Registration page
+├── users/               # Plain list of registered users (tRPC demo)
+├── layout.tsx           # Root layout and providers
+└── page.tsx             # Landing page
 src/
 ├── client/
-│   ├── common/        # Client utilities and enums
-│   ├── components/    # Reusable UI components
-│   └── trpc/          # tRPC and TanStack Query setup
+│   ├── auth/         # better-auth React client
+│   ├── common/       # Client utilities and enums
+│   ├── components/   # Reusable UI components (atoms/molecules/organisms)
+│   └── trpc/         # tRPC and TanStack Query setup
 ├── server/
-│   ├── db/            # Database client, schema, and migrations
-│   ├── modules/       # Feature services, repositories, routers, and tables
-│   ├── trpc/          # Server-side tRPC configuration
-│   └── utils/         # Hashing and token utilities
+│   ├── db/
+│   │   ├── client.ts    # Drizzle/postgres client
+│   │   ├── schema.ts    # Combined Drizzle schema
+│   │   ├── tables/      # All Drizzle table definitions
+│   │   └── migrations/  # Versioned SQL migrations
+│   ├── modules/  # Feature services, repositories, and routers
+│   ├── trpc/     # Server-side tRPC configuration
+│   └── utils/    # Server-side utilities
 └── shared/
-    └── modules/       # Types, schemas, and enums shared across boundaries
+    └── modules/  # Types, schemas, and enums shared across boundaries
 ```
 
 The server follows a feature-oriented layered structure: tRPC routers handle
 transport concerns, services contain business logic, and repositories own
 database access. Shared request types and schemas keep validation consistent
-between the browser and server.
+between the browser and server. All Drizzle table definitions live in
+`src/server/db/tables` so the full database shape is discoverable from one
+place instead of being scattered across feature modules.
 
 ## Available scripts
 
@@ -142,13 +169,18 @@ between the browser and server.
 
 ## Database workflow
 
-Drizzle table definitions live alongside their server modules in
-`src/server/modules/**/tables`. After changing a table definition, generate and
-review a migration before applying it:
+Drizzle table definitions live in `src/server/db/tables`. After changing a
+table definition, generate and review a migration before applying it:
 
 ```bash
 npm run db:generate
 npm run db:migrate
+```
+
+Generate migrations with a descriptive name so history stays readable:
+
+```bash
+npx drizzle-kit generate --name=add_something_table
 ```
 
 Generated SQL and migration metadata are stored in `src/server/db/migrations`.

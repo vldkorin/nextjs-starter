@@ -8,20 +8,19 @@ import { AppRoute } from "@/src/client/common/enums/route/app-route.enum";
 import { Button } from "@/src/client/components/atoms/button/button";
 import { FormField } from "@/src/client/components/molecules/form-field/form-field";
 import { GoogleAuthButton } from "@/src/client/components/organisms/google-auth-button/google-auth-button";
-import { registerSchema } from "@/src/shared/modules/auth/schemas/register.schema";
-import type { RegisterInput } from "@/src/shared/modules/auth/types/register.input.type";
+import { loginSchema } from "@/src/shared/modules/auth/schemas/login.schema";
+import type { LoginInput } from "@/src/shared/modules/auth/types/login.input.type";
 
-export default function RegisterPage() {
-  const registerMutation = useMutation({
-    mutationFn: async (value: RegisterInput) => {
-      const { data, error } = await authClient.signUp.email({
+export default function LoginPage() {
+  const loginMutation = useMutation({
+    mutationFn: async (value: LoginInput) => {
+      const { data, error } = await authClient.signIn.email({
         email: value.email,
-        name: value.name,
         password: value.password
       });
 
       if (error) {
-        throw new Error(error.message ?? "Registration failed");
+        throw new Error(error.message ?? "Sign in failed");
       }
 
       return data;
@@ -33,23 +32,21 @@ export default function RegisterPage() {
 
   const form = useForm({
     defaultValues: {
-      name: "",
       email: "",
-      password: "",
-      confirmPassword: ""
-    } as RegisterInput,
+      password: ""
+    } as LoginInput,
     validators: {
-      onSubmit: registerSchema
+      onSubmit: loginSchema
     },
     onSubmit: async ({ value }) => {
-      await registerMutation.mutateAsync(value);
+      await loginMutation.mutateAsync(value);
     }
   });
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col gap-6 px-6 py-10">
       <h1 className="text-3xl font-semibold text-black dark:text-zinc-50">
-        Register
+        Sign in
       </h1>
 
       <form
@@ -60,21 +57,6 @@ export default function RegisterPage() {
           void form.handleSubmit();
         }}
       >
-        <form.Field name="name">
-          {(field) => {
-            return (
-              <FormField
-                autoComplete="name"
-                field={field}
-                label="Name"
-                placeholder="Your name"
-                submissionAttempts={form.state.submissionAttempts}
-                type="text"
-              />
-            );
-          }}
-        </form.Field>
-
         <form.Field name="email">
           {(field) => {
             return (
@@ -94,10 +76,10 @@ export default function RegisterPage() {
           {(field) => {
             return (
               <FormField
-                autoComplete="new-password"
+                autoComplete="current-password"
                 field={field}
                 label="Password"
-                placeholder="Create a secure password"
+                placeholder="Your password"
                 submissionAttempts={form.state.submissionAttempts}
                 type="password"
               />
@@ -105,29 +87,14 @@ export default function RegisterPage() {
           }}
         </form.Field>
 
-        <form.Field name="confirmPassword">
-          {(field) => {
-            return (
-              <FormField
-                autoComplete="new-password"
-                field={field}
-                label="Confirm password"
-                placeholder="Repeat password"
-                submissionAttempts={form.state.submissionAttempts}
-                type="password"
-              />
-            );
-          }}
-        </form.Field>
-
-        <Button type="submit" disabled={registerMutation.isPending}>
-          {registerMutation.isPending ? "Registering..." : "Register"}
+        <Button type="submit" disabled={loginMutation.isPending}>
+          {loginMutation.isPending ? "Signing in..." : "Sign in"}
         </Button>
       </form>
 
-      {registerMutation.error ? (
+      {loginMutation.error ? (
         <p className="rounded-md border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
-          {registerMutation.error.message}
+          {loginMutation.error.message}
         </p>
       ) : null}
 
@@ -140,9 +107,9 @@ export default function RegisterPage() {
       <GoogleAuthButton />
 
       <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        Already have an account?{" "}
-        <a className="underline" href={AppRoute.LOGIN}>
-          Sign in
+        No account yet?{" "}
+        <a className="underline" href={AppRoute.REGISTER}>
+          Register
         </a>
       </p>
     </main>

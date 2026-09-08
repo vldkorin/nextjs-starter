@@ -1,5 +1,8 @@
 enum AppRoute {
-  REGISTER = "/register"
+  HOME = "/",
+  LOGIN = "/login",
+  REGISTER = "/register",
+  USERS = "/users"
 }
 
 export { AppRoute };

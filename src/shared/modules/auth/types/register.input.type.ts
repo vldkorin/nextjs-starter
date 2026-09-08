@@ -1,5 +1,6 @@
 export interface RegisterInput {
-  email: string;
-  password: string;
   confirmPassword: string;
+  email: string;
+  name: string;
+  password: string;
 }

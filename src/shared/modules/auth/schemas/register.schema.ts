@@ -5,6 +5,9 @@ import { AuthValidationEnum } from "../enums/auth-validation.enum";
 
 const registerSchema = z
   .object({
+    name: z.string().trim().min(1, {
+      message: AuthErrorMessageEnum.NAME_REQUIRED
+    }),
     email: z
       .email()
       .trim()

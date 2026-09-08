@@ -8,6 +8,20 @@
       "when": 1776976313558,
       "tag": "0000_add_users_table",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1788896618057,
+      "tag": "0001_drop_users_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788896625230,
+      "tag": "0002_add_better_auth_tables",
+      "breakpoints": true
     }
   ]
 }
